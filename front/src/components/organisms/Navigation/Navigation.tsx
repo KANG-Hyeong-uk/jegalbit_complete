@@ -56,7 +56,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
       <NavContent>
         <Logo as={Link} to="/">
           <LogoIcon>₿</LogoIcon>
-          <LogoText>CryptoPortfolio</LogoText>
+          <LogoText>jegalbit</LogoText>
         </Logo>
 
         <MenuList>

@@ -56,7 +56,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <AboutSection>
             <Logo>
               <LogoIcon>₿</LogoIcon>
-              <LogoText>CryptoPortfolio</LogoText>
+              <LogoText>jegalbit</LogoText>
             </Logo>
             <Description>
               실시간 암호화폐 시장 분석과 포트폴리오 관리를 위한 올인원 플랫폼.
@@ -131,7 +131,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
         {/* 저작권 바 */}
         <CopyrightBar>
           <Copyright>
-            © {currentYear} CryptoPortfolio. All rights reserved.
+            © {currentYear} jegalbit. All rights reserved.
           </Copyright>
           <LegalLinks>
             <LegalLink href="#terms">이용약관</LegalLink>
