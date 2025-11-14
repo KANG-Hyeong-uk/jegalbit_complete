@@ -16,6 +16,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           password: ${{ secrets.EC2_PASS }}
+          port: 22
+          timeout: 60s
+          command_timeout: 30m
+          sync: true
           script: |
             cd /home/edu04/jegalbit
             git pull origin master
