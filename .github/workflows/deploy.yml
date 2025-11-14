@@ -11,29 +11,47 @@ jobs:
 
     steps:
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          timeout: 60s
-          command_timeout: 30m
           script: |
+            set -e
+
+            echo "=== Starting deployment ==="
+
+            # 프로젝트 디렉토리로 이동
             cd /home/edu04/jegalbit
+
+            # Git 최신 코드 가져오기
+            echo "Pulling latest code..."
             git pull origin master
 
             # 기존 프로세스 종료
+            echo "Stopping existing processes..."
             pkill -f "vite" || true
             pkill -f "uvicorn" || true
+            sleep 2
 
-            # 프론트엔드 의존성 설치 및 백그라운드 실행
+            # 프론트엔드 배포
+            echo "Deploying frontend..."
             cd /home/edu04/jegalbit/front
             npm install
-            nohup npm run dev -- --host 0.0.0.0 > /home/edu04/jegalbit/front.log 2>&1 & disown
+            nohup npm run dev -- --host 0.0.0.0 > /home/edu04/jegalbit/front.log 2>&1 &
 
-            # 백엔드 백그라운드 실행
+            # 백엔드 배포
+            echo "Deploying backend..."
             cd /home/edu04/jegalbit/backend
-            nohup uvicorn app_fastapi:app --host 0.0.0.0 --port 5001 > /home/edu04/jegalbit/backend.log 2>&1 & disown
+            source venv/bin/activate
+            pip install -q -r requirements.txt
+            nohup uvicorn app_fastapi:app --host 0.0.0.0 --port 5001 > /home/edu04/jegalbit/backend.log 2>&1 &
 
-            echo "Deployment completed!"
+            sleep 3
+
+            # 프로세스 확인
+            echo "Checking processes..."
+            ps aux | grep -E "(vite|uvicorn)" | grep -v grep || echo "Warning: Processes not found"
+
+            echo "=== Deployment completed ==="
